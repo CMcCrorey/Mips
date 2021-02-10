@@ -1,0 +1,68 @@
+ .data
+begin: .asciiz "Enter number of integers \n"
+end: .asciiz "\n"
+int: .asciiz "enter int \n"
+
+
+
+.text
+.globl main
+
+main:
+li $v0, 4
+la $a0 , begin
+syscall
+
+li $v0, 5
+syscall
+move $t0, $v0
+move $t2, $t0
+
+
+move $s0, $0          
+
+loop:
+beq $t2, $0, here
+li $v0, 4
+la $a0, int
+syscall
+
+li $v0, 5
+syscall
+move $t3, $v0
+
+
+addi $sp, $sp, -4
+sw $t3, 0($sp)
+addi $t2,$t2,-1
+j loop
+
+
+here:   
+beq $t0, $0, done
+bgt $t0,$s0, first
+lw $t3, 0($sp)
+addi $sp, $sp, 4
+addi $t0,$t0,-1
+add $t4, $t4, $t3 
+
+j here
+
+
+done:
+
+
+li $v0, 1
+move $a0, $t4
+syscall
+
+li $v0, 10
+syscall
+
+first:
+lw $t3, 0($sp)
+addi $sp, $sp, 4
+addi $t0,$t0,-1
+move $t4, $t3
+move $s0, $t0
+j here
